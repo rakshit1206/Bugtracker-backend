@@ -1,4 +1,5 @@
 
+import { BadRequest } from "../Errors/errors";
 import {
   REFRESH_TOKEN_SECRET,
   refreshTokenSecretExpire,
@@ -24,7 +25,7 @@ export function getJwt(user: any) {
 
 export function checkRoleAccess(user: any, type: string[]) {
   if (!user.role || !user.subRole) {
-    throw new Error("User role or subrole not found");
+    throw new BadRequest("Role must be specified");
   }
   if (
     type.includes(user.role.name.toLocaleLowerCase()) ||
