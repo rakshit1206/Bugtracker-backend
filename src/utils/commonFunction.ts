@@ -1,0 +1,35 @@
+
+import {
+  REFRESH_TOKEN_SECRET,
+  refreshTokenSecretExpire,
+  TOKEN_SECRET,
+  tokenSecretExpire,
+} from "./constant";
+import jwt from "jsonwebtoken";
+export function getJwt(user: any) {
+  const data = {
+    id: user.id,
+  };
+
+  const accessToken = jwt.sign(data, TOKEN_SECRET!, {
+    expiresIn: tokenSecretExpire,
+  });
+
+  const refreshToken = jwt.sign(data, REFRESH_TOKEN_SECRET!, {
+    expiresIn: refreshTokenSecretExpire,
+  });
+
+  return { accessToken, refreshToken };
+}
+
+export function checkRoleAccess(user: any, type: string[]) {
+  if (!user.role || !user.subRole) {
+    throw new Error("User role or subrole not found");
+  }
+  if (
+    type.includes(user.role.name.toLocaleLowerCase()) ||
+    type.includes(user.subRole.name.toLocaleLowerCase())
+  ) {
+    return true;
+  } else return false;
+}
