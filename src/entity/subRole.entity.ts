@@ -9,22 +9,23 @@ import {
   ManyToMany,
 } from "typeorm";
 import { User } from "./user.entity";
-import { SubRole } from "./subRole.entity";
+import { Role } from "./role.entity";
 
 @Entity()
-export class Role extends BaseEntity {
+export class SubRole extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => SubRole, (subRole) => subRole.role, {
+  @ManyToOne(() => Role, (role) => role.subRoles, {
+    nullable: false,
     onDelete: "CASCADE",
   })
-  subRoles: SubRole[];
+  role: Role;
 
-  @OneToMany(() => User, (user) => user.role)
+  @OneToMany(() => User, (user) => user.subRole)
   users: User[];
 
   @CreateDateColumn()

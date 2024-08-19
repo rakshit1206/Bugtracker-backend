@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Import routes files
 import userRoutes from "./routes/user.routes";
 import roleRoutes from "./routes/role.routes";
-
+import subRoleRoutes from "./routes/subRole.routes";
 
 
 // Additional middlewares
@@ -37,6 +37,7 @@ app.use("/uploads", express.static("uploads"));
 // Routes are mentioned here
 app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
+app.use("/subRoles", subRoleRoutes);
 
 
 

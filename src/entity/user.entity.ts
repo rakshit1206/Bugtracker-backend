@@ -11,6 +11,8 @@ import {
   AfterLoad,
   ManyToOne,
 } from "typeorm";
+import { Role } from "./role.entity";
+import { SubRole } from "./subRole.entity";
 
 import * as bcrypt from "bcrypt";
 import { userStatus } from "../utils/types";
@@ -38,6 +40,14 @@ export class User extends BaseEntity {
 
   @Column({ default: "active" })
   status: userStatus;
+
+  @ManyToOne(() => Role, (role) => role.users, { eager: true })
+  role: Role;
+
+  @ManyToOne(() => SubRole, (subRole) => subRole.users, { eager: true })
+  subRole: SubRole;
+
+
 
   @CreateDateColumn()
   createdAt: Date;
