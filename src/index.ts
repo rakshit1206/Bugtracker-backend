@@ -20,6 +20,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+// Import routes files
+import userRoutes from "./routes/user.routes";
+
+
 
 // Additional middlewares
 app.use(express.urlencoded({ extended: false }));
@@ -28,6 +32,9 @@ app.use(pagination);
 
 // Allow uploads folder to be processed as static
 app.use("/uploads", express.static("uploads"));
+
+// Routes are mentioned here
+app.use("/users", userRoutes);
 
 
 app.get("/", (req: Request, res: Response) => {
