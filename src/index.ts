@@ -25,6 +25,7 @@ import userRoutes from "./routes/user.routes";
 import roleRoutes from "./routes/role.routes";
 import subRoleRoutes from "./routes/subRole.routes";
 import googlePlayRoutes from "./routes/googlePlay.routes";
+import projectsRoutes from "./routes/projects.routes";
 
 
 // Additional middlewares
@@ -40,7 +41,7 @@ app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
 app.use("/subRoles", subRoleRoutes);
 app.use("/liveTrack", googlePlayRoutes);
-
+app.use("/projects", projectsRoutes);
 
 
 app.get("/", (req: Request, res: Response) => {
