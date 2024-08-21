@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-
+import { dbType } from "./types";
 import { DataSourceOptions } from "typeorm";
 
 dotenv.config();
@@ -42,7 +42,7 @@ if (ENV.USE_DB === "LOCAL") {
   };
 }
 export const config: DataSourceOptions = {
-  type: configDB.type as any,
+  type: configDB.type as dbType,
   host: configDB.host as string,
   port: +(configDB.port as string),
   username: configDB.username,
@@ -53,4 +53,23 @@ export const config: DataSourceOptions = {
   logging: ENV.LOGENABLE === "true",
 };
 
+export const getLocalIpAddress = () => {
+  const { networkInterfaces } = require("os");
+
+  const nets = networkInterfaces();
+  let ip = "localhost";
+  const results = [];
+
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      const familyV4Value = typeof net.family === "string" ? "IPv4" : 4;
+      if (net.family === familyV4Value && !net.internal) {
+        results.push(net);
+      }
+    }
+  }
+
+  ip = results.length ? results[0].address : ip;
+  return `http://${ip}:${PORT}`;
+};
 export const SERVER_URL = `http://localhost:${PORT}/`;

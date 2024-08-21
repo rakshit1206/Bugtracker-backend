@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-
+import roleService from "../services/role.service";
 import { User } from "../entity/user.entity";
 import ApiResponse from "../Response/ApiResponse";
 import userService from "../services/user.service";
@@ -8,7 +8,7 @@ import { DeepPartial } from "typeorm";
 import Middleware from "../middlewares/Middleware";
 import * as bcrypt from "bcrypt";
 import { checkRoleAccess, getJwt } from "../utils/commonFunction";
-
+import subRoleService from "../services/subRole.service";
 import { deleteFile, fileUploader } from "../utils/imageUpload";
 import { UploadedFile } from "express-fileupload";
 
@@ -52,6 +52,12 @@ class UserController {
         throw new BadRequest(`Email already exists ${email}`, 401);
       }
 
+      let role = await roleService.getRoleById(+roleId);
+      if (!role) throw new BadRequest("Role not found", 400);
+
+      let subRole = await subRoleService.getSubRoleById(+subRoleId);
+      if (!subRole) throw new BadRequest("Sub Role not found", 400);
+
       let image = req.files?.image as UploadedFile;
       let profile = "https://github.com/shadcn.png";
       if (image) {
@@ -60,7 +66,8 @@ class UserController {
       let user = User.create({
         firstName,
         lastName,
-       
+        role,
+        subRole,
         email,
         password,
         status,
@@ -186,7 +193,18 @@ class UserController {
         updateUser.email = email;
       }
 
-     
+      if (roleId) {
+        const role = await roleService.getRoleById(+roleId);
+        if (!role) throw new BadRequest("Role not found", 400);
+        updateUser.role = role;
+      }
+
+      if (subRoleId) {
+        const subRole = await subRoleService.getSubRoleById(+subRoleId);
+        if (!subRole) throw new BadRequest("Sub Role not found", 400);
+        updateUser.subRole = subRole;
+      }
+
       if (firstName) updateUser.firstName = firstName;
       if (lastName) updateUser.lastName = lastName;
       if (status) updateUser.status = status;

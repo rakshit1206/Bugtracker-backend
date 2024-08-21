@@ -9,9 +9,9 @@
     "subrole": "admin"
   },
   {
-    "firstname": "John",
-    "lastname": "Doe",
-    "email": "john@example.com",
+    "firstname": "Rakshit",
+    "lastname": "Sain",
+    "email": "Rakshit@example.com",
     "password": "123456",
     "status": "active",
     "role": "employee",

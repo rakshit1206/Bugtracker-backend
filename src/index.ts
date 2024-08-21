@@ -6,7 +6,6 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import fileUpload from "express-fileupload";
 const app = express();
-const PORT = process.env.PORT || 5001;
 // app.use(Middleware.requestLogs);
 
 app.use(cors());
@@ -19,14 +18,14 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 // Import routes files
 import userRoutes from "./routes/user.routes";
 import roleRoutes from "./routes/role.routes";
 import subRoleRoutes from "./routes/subRole.routes";
 import googlePlayRoutes from "./routes/googlePlay.routes";
 import projectsRoutes from "./routes/projects.routes";
-
+import { RequestError } from "./utils/types";
+import { getLocalIpAddress, PORT } from "./utils/constant";
 
 // Additional middlewares
 app.use(express.urlencoded({ extended: false }));
@@ -40,9 +39,8 @@ app.use("/uploads", express.static("uploads"));
 app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
 app.use("/subRoles", subRoleRoutes);
-app.use("/liveTrack", googlePlayRoutes);
 app.use("/projects", projectsRoutes);
-
+app.use("/liveTrack", googlePlayRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
@@ -52,7 +50,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Error handling middleware
 app.use(
-  (err: any, _req: Request, res: Response, next: NextFunction) => {
+  (err: RequestError, _req: Request, res: Response, next: NextFunction) => {
     let statusCode = err.code || 500;
     // if (err.code.toString() === "23505") {
     //   statusCode = 409; // Conflict
@@ -72,7 +70,7 @@ myDataSource
   .then(() => {
     app.listen(PORT, () => {
       console.log(
-        `CONNECTED TO DB AND SERVER STARTED ON PORT - ${PORT}\n `
+        `CONNECTED TO DB AND SERVER STARTED ON PORT - ${PORT}\n ${getLocalIpAddress()}`
       );
     });
   })

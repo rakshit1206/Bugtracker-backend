@@ -13,7 +13,11 @@ import {
 } from "typeorm";
 import { Role } from "./role.entity";
 import { SubRole } from "./subRole.entity";
-
+import { Project } from "./project.entity";
+import { Version } from "./version.entity";
+import { UserProject } from "./userProject.entity";
+import { Bug } from "./bug.entity";
+import { PinnedProject } from "./pinnedProject.entity";
 import * as bcrypt from "bcrypt";
 import { userStatus } from "../utils/types";
 import { SERVER_URL } from "../utils/constant";
@@ -47,7 +51,23 @@ export class User extends BaseEntity {
   @ManyToOne(() => SubRole, (subRole) => subRole.users, { eager: true })
   subRole: SubRole;
 
+  @OneToMany(() => Project, (project) => project.createdBy)
+  projects: Project[];
 
+  @OneToMany(() => Version, (version) => version.createdBy)
+  versions: Version[];
+
+  @OneToMany(() => UserProject, (userProject) => userProject.user)
+  userProjects: UserProject[];
+
+  @OneToMany(() => Bug, (bug) => bug.reportedBy)
+  reportedBugs: Bug[];
+
+  @OneToMany(() => Bug, (bug) => bug.assignedTo)
+  assignedBugs: Bug[];
+
+  @OneToMany(() => PinnedProject, (pinnedProject) => pinnedProject.user)
+  pinnedProjects: PinnedProject[];
 
   @CreateDateColumn()
   createdAt: Date;
